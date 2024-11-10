@@ -1,0 +1,33 @@
+services:
+  app:
+    container_name: evo-client-app
+    mem_limit: 1g
+    mem_reservation: 512m
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      IGNITION_LOCAL_SITES_PATH: "."
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+      - .htaccess:/var/www/html/.htaccess
+      - .docker/php/php.ini:/etc/php/8.1/apache2/php.ini
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      evo-client-network:
+        aliases:
+          - "evo-client.localhost"
+networks:
+  evo-client-network:
+    driver: bridge
+volumes:
+  evo-client-app:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./
+      o: bind

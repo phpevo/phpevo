@@ -1,0 +1,20 @@
+{
+    "name": "sixtec/sdk-evolution-api",
+    "description": "SDK Evolution API - PHP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sixtec\\EvolutionAPIClient\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mário Lucas",
+            "email": "mario@sixtec.com.br"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}
