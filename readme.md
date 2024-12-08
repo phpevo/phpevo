@@ -1,1 +1,0 @@
-# Evolution API SDK - PHP
