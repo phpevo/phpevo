@@ -1,20 +1,28 @@
 {
-    "name": "sixtec/sdk-evolution-api",
-    "description": "SDK Evolution API - PHP",
+    "name": "mariolucasdev/evolution-sdk",
     "type": "library",
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "laravel/framework": "10.48.12",
+        "guzzlehttp/guzzle": "^7.5"
+    },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Sixtec\\EvolutionAPIClient\\": "src/"
+            "Evolution\\": "src/"
         }
     },
     "authors": [
         {
             "name": "Mário Lucas",
-            "email": "mario@sixtec.com.br"
+            "email": "mariolucasdev@gmail.com"
         }
     ],
-    "require": {
-        "guzzlehttp/guzzle": "^7.0"
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }

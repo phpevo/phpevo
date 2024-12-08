@@ -1,0 +1,5 @@
+<?php
+
+$apiBaseUrl = '';
+$apiKey = '';
+$instance = '';

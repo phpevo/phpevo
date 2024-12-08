@@ -1,2 +1,3 @@
 .docker
 /vendor/
+/examples/credentials.php
