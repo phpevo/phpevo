@@ -18,7 +18,10 @@
         "evolution php sdk"
     ],
     "require": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "illuminate/container": "10.48",
+        "illuminate/support": "10.48",
+        "illuminate/http": "10.48"
     },
     "require-dev": {
         "laravel/framework": "10.48.12",
