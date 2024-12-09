@@ -23,10 +23,7 @@
         "illuminate/support": "10.48",
         "illuminate/http": "10.48"
     },
-    "require-dev": {
-        "laravel/framework": "10.48.12",
-        "guzzlehttp/guzzle": "^7.5"
-    },
+    "require-dev": {},
     "license": "MIT",
     "autoload": {
         "psr-4": {

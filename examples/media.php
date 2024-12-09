@@ -15,7 +15,7 @@ $evolution = (new Evolution($apiKey, $apiBaseUrl))
 $image = $evolution
     ->caption('Image - Evolution SDK Running...')
     ->fileName('media.png')
-    ->media('https://pps.whatsapp.net/v/t61.24694-24/461453889_1003211914911151_4640067951401387632_n.jpg?stp=dst-jpg_tt6&ccb=11-4&oh=01_Q5AaIPA44s_lY3wrfH-fBLBNPytUMRNTbpRNwuyU2gKearCm&oe=67634050&_nc_sid=5e03e0&_nc_cat=105', MediaTypeEnum::IMAGE);
+    ->media('./media/media.png', MediaTypeEnum::IMAGE);
 
 print_r($image);
 
