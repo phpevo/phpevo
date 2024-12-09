@@ -11,7 +11,8 @@ composer require mariolucasdev/evolution-sdk
 load Evolution class:
 
 ```php
-$evolution = new Evolution($apiKey, $apiBaseUrl);
+$evolution = (new Evolution($apiKey, $apiBaseUrl))
+    ->send($instance);
 ```
 
 ## Resouces
@@ -20,9 +21,8 @@ $evolution = new Evolution($apiKey, $apiBaseUrl);
 
 ```php
 $message = $evolution
-    ->send($instance)
-    ->to('5599999999999')
-    ->plainText('Evolution SDK Running...');
+    ->to($phone)
+    ->plainText($message);
 
 print_r($message);
 ```
@@ -38,44 +38,29 @@ $evolution = (new Evolution($apiKey, $apiBaseUrl))
 
 /* image */
 $image = $evolution
-    ->caption('Image - Evolution SDK Running...')
-    ->fileName('media.png')
-    ->media('./media/media.png', MediaTypeEnum::IMAGE);
-
-print_r($image);
+    ->caption($caption)
+    ->fileName($fileName)
+    ->media($filePath, MediaTypeEnum::IMAGE);
 
 /* audio */
 $audio = $evolution
-    ->fileName('media.mp3')
-    ->media('http://webaudioapi.com/samples/audio-tag/chrono.mp3', MediaTypeEnum::AUDIO);
-
-print_r($audio);
+    ->fileName($audioFileName)
+    ->media($audioFilePath, MediaTypeEnum::AUDIO);
 
 /* video */
 $video = $evolution
-    ->caption('Video - Evolution SDK Running...')
-    ->fileName('media.mp4')
-    ->media('./media/media.mp4', MediaTypeEnum::VIDEO);
-
-print_r($video);
+    ->caption($caption)
+    ->fileName($videoFileName)
+    ->media($videoFilePath, MediaTypeEnum::VIDEO);
 
 /* document */
 $document = $evolution
-    ->caption('Document - Evolution SDK Running...')
-    ->fileName('media.pdf')
-    ->media('./media/media.pdf', MediaTypeEnum::DOCUMENT);
-
-print_r($document);
+    ->caption($caption)
+    ->fileName($documentFileName)
+    ->media($documentFilePath, MediaTypeEnum::DOCUMENT);
 ```
 
 ## Roadmap
-
-#### Send
-
-- Check status
-- Send Location
-- Send List
-- Send Buttons
 
 #### Instances
 
@@ -87,6 +72,13 @@ print_r($document);
 - Logout Instance
 - Delete Instance
 - Set Presence
+
+#### Send
+
+- Check status
+- Send Location
+- Send List
+- Send Buttons
 
 ## 🌟 Contribuindo
 
@@ -106,4 +98,9 @@ Este projeto está licenciado sob a MIT License. Consulte o arquivo LICENSE para
 ## 🤝 Contato
 
 💻 GitHub: mariolucasdev
+
 📧 Email: mariolucasdev@gmail.com
+
+## ☕ Buy me a coffee
+
+[here!]<https://github.com/sponsors/mariolucasdev>
