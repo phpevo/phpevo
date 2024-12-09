@@ -1,6 +1,22 @@
 {
     "name": "mariolucasdev/evolution-sdk",
     "type": "library",
+    "description": "Uma SDK em PHP para integração simplificada com a Evolution API.",
+    "funding": [
+        {
+            "url": "https://github.com/sponsors/mariolucasdev",
+            "type": "github"
+        }
+    ],
+    "keywords": [
+        "evolution",
+        "api",
+        "sdk",
+        "php",
+        "evolution-php-sdk",
+        "evolution-sdk",
+        "evolution php sdk"
+    ],
     "require": {
         "php": "^8.1"
     },
