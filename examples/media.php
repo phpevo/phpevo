@@ -1,43 +1,32 @@
 <?php
 
-use Evolution\Evolution;
-use Evolution\Services\Enums\MediaTypeEnum;
+use PHPEvo\PHPEvo;
+use PHPEvo\Services\Enums\MediaTypeEnum;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 require_once __DIR__ . '/credentials.php';
 
-$evolution = (new Evolution($apiKey, $apiBaseUrl))
+$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
+
+$phpevo
     ->send($instance)
-    ->to($phone);
+    ->to($phone)
+    ->media(__DIR__ . '/media/media.png', MediaTypeEnum::IMAGE);
 
-// image
-$image = $evolution
-    ->caption('Image - Evolution SDK Running...')
-    ->fileName('media.png')
-    ->media('./media/media.png', MediaTypeEnum::IMAGE);
+$audio = $phpevo
+    ->send($instance)
+    ->to($phone)
+    ->media(__DIR__ . '/media/media.m4a', MediaTypeEnum::AUDIO);
 
-print_r($image);
-
-// audio
-$audio = $evolution
-    ->fileName('media.mp3')
-    ->media('http://webaudioapi.com/samples/audio-tag/chrono.mp3', MediaTypeEnum::AUDIO);
-
-print_r($audio);
-
-// video
-$video = $evolution
+$phpevo
+    ->send($instance)
+    ->to($phone)
     ->caption('Video - Evolution SDK Running...')
-    ->fileName('media.mp4')
-    ->media('./media/media.mp4', MediaTypeEnum::VIDEO);
+    ->media(__DIR__ . '/media/media.mp4', MediaTypeEnum::VIDEO);
 
-print_r($video);
-
-// document
-$document = $evolution
-    ->caption('Document - Evolution SDK Running...')
+$phpevo
+    ->send($instance)
+    ->to($phone)
     ->fileName('media.pdf')
-    ->media('./media/media.pdf', MediaTypeEnum::DOCUMENT);
-
-print_r($document);
+    ->media(__DIR__ . '/media/media.pdf', MediaTypeEnum::DOCUMENT);

@@ -121,12 +121,19 @@ class SendService
      */
     public function media(string $media, MediaTypeEnum $mediaType): array
     {
-        $endpoint = '/message/sendMedia/' . $this->instance;
+        $endpoint = 'message/sendMedia/' . $this->instance;
 
-        if (is_file($media) &&
-            (strpos($media, 'http') === false ||
-            strpos($media, 'https') === false)) {
-            $media = base64_encode(file_get_contents(realpath($media)));
+        if (strpos($media, 'http') === false &&
+            strpos($media, 'https') === false) {
+
+            if (!file_exists($media)) {
+                return [
+                    'error' => 'error',
+                    'message' => 'Arquivo não encontrado.',
+                ];
+            }
+
+            $media = base64_encode(realpath($media));
         }
 
         $data = [
@@ -143,7 +150,9 @@ class SendService
             $data['fileName'] = $this->fileName;
         }
 
-        $response = $this->client->post($endpoint, $data);
+        $response = $this->client->post($endpoint, [
+            'json' => $data,
+        ]);
 
         if ($response->getStatusCode()  == 201) {
             $response = json_decode($response->getBody(), true);
