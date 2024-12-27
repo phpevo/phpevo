@@ -1,9 +1,9 @@
 <?php
 
-namespace Evolution\Services;
+namespace PHPEvo\Services;
 
-use Evolution\Services\Enums\MediaTypeEnum;
-use Illuminate\Support\Facades\Http;
+use PHPEvo\Services\Enums\MediaTypeEnum;
+use GuzzleHttp\Client;
 
 /**
  * Class SendService
@@ -23,6 +23,7 @@ class SendService
      */
     public function __construct(
         private string $instance,
+        private Client $client,
         private string $to = '',
         private string $caption = '',
         private string $fileName = '',
@@ -90,13 +91,14 @@ class SendService
      */
     public function plainText(string $message): array
     {
-        $endpoint = '/message/sendText/' . $this->instance;
+        $endpoint = 'message/sendText/' . $this->instance;
 
-        $response = Http::evolution()
-            ->post($endpoint, [
+        $response = $this->client->post($endpoint, [
+            'json' => [
                 'number' => $this->to,
                 'text' => $message,
-            ]);
+            ],
+        ]);
 
         if ($response->getStatusCode()  == 201) {
             $response = json_decode($response->getBody(), true);
@@ -141,8 +143,7 @@ class SendService
             $data['fileName'] = $this->fileName;
         }
 
-        $response = Http::evolution()
-            ->post($endpoint, $data);
+        $response = $this->client->post($endpoint, $data);
 
         if ($response->getStatusCode()  == 201) {
             $response = json_decode($response->getBody(), true);

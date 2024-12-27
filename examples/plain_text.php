@@ -1,14 +1,12 @@
 <?php
 
-use Evolution\Evolution;
+use PHPEvo\PHPEvo;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/credentials.php';
+$evophp = new PHPEvo($apiKey, $apiBaseUrl);
 
-$evolution = (new Evolution($apiKey, $apiBaseUrl))
-    ->send($instance);
-
-$message = $evolution
-    ->to('5599999999999')
-    ->plainText('Evolution SDK Running...');
+$evophp
+    ->send($instance)
+    ->to('5511999999999')
+    ->plainText('PHPEvo is awesome!');

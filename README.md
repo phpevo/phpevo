@@ -5,14 +5,13 @@
 installing package:
 
 ```bash
-composer require mariolucasdev/evolution-sdk
+composer require phpevo/phpevo
 ```
 
 load Evolution class:
 
 ```php
-$evolution = (new Evolution($apiKey, $apiBaseUrl))
-    ->send($instance);
+$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
 ```
 
 ## Resouces
@@ -20,11 +19,10 @@ $evolution = (new Evolution($apiKey, $apiBaseUrl))
 #### send plain text:
 
 ```php
-$message = $evolution
+$phpevo
+    ->send($instanceName)
     ->to($phone)
     ->plainText($message);
-
-print_r($message);
 ```
 
 #### send media:
@@ -32,29 +30,29 @@ print_r($message);
 - Send Image
 
 ```php
-$evolution = (new Evolution($apiKey, $apiBaseUrl))
+$phpevo = (new Evolution($apiKey, $apiBaseUrl))
     ->send($instance)
     ->to($phone);
 
 /* image */
-$image = $evolution
+$phpevo
     ->caption($caption)
     ->fileName($fileName)
     ->media($filePath, MediaTypeEnum::IMAGE);
 
 /* audio */
-$audio = $evolution
+$phpevo
     ->fileName($audioFileName)
     ->media($audioFilePath, MediaTypeEnum::AUDIO);
 
 /* video */
-$video = $evolution
+$phpevo
     ->caption($caption)
     ->fileName($videoFileName)
     ->media($videoFilePath, MediaTypeEnum::VIDEO);
 
 /* document */
-$document = $evolution
+$phpevo
     ->caption($caption)
     ->fileName($documentFileName)
     ->media($documentFilePath, MediaTypeEnum::DOCUMENT);

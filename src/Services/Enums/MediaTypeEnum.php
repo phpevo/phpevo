@@ -1,6 +1,6 @@
 <?php
 
-namespace Evolution\Services\Enums;
+namespace PHPEvo\Services\Enums;
 
 enum MediaTypeEnum: string
 {
