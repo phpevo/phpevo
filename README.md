@@ -1,6 +1,6 @@
-# Evolution API SDK - PHP
+# PHPEvo
 
-## Using Evolution SDK PHP
+## Using PHPEvo
 
 installing package:
 
@@ -27,35 +27,32 @@ $phpevo
 
 #### send media:
 
-- Send Image
-
 ```php
-$phpevo = (new Evolution($apiKey, $apiBaseUrl))
-    ->send($instance)
-    ->to($phone);
-
 /* image */
 $phpevo
-    ->caption($caption)
-    ->fileName($fileName)
-    ->media($filePath, MediaTypeEnum::IMAGE);
+    ->send($instance)
+    ->to($phone)
+    ->media(__DIR__ . '/media/media.png', MediaTypeEnum::IMAGE);
 
 /* audio */
-$phpevo
-    ->fileName($audioFileName)
-    ->media($audioFilePath, MediaTypeEnum::AUDIO);
+$audio = $phpevo
+    ->send($instance)
+    ->to($phone)
+    ->media(__DIR__ . '/media/media.m4a', MediaTypeEnum::AUDIO);
 
-/* video */
+/* vídeo */
 $phpevo
-    ->caption($caption)
-    ->fileName($videoFileName)
-    ->media($videoFilePath, MediaTypeEnum::VIDEO);
+    ->send($instance)
+    ->to($phone)
+    ->caption('Video - Evolution SDK Running...')
+    ->media(__DIR__ . '/media/media.mp4', MediaTypeEnum::VIDEO);
 
-/* document */
+/* documents */
 $phpevo
-    ->caption($caption)
-    ->fileName($documentFileName)
-    ->media($documentFilePath, MediaTypeEnum::DOCUMENT);
+    ->send($instance)
+    ->to($phone)
+    ->fileName('media.pdf')
+    ->media(__DIR__ . '/media/media.pdf', MediaTypeEnum::DOCUMENT);
 ```
 
 ## Roadmap
