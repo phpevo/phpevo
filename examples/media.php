@@ -11,22 +11,22 @@ $phpevo = new PHPEvo($apiKey, $apiBaseUrl);
 
 /* image */
 $phpevo
-->send($instance)
-->to($phone)
-->media(__DIR__ . '/media/media.png', MediaTypeEnum::IMAGE);
+    ->send($instance)
+    ->to($phone)
+    ->media(__DIR__ . '/media/media.png', MediaTypeEnum::IMAGE);
 
 /* audio */
-$audio = $phpevo
-->send($instance)
-->to($phone)
-->media(__DIR__ . '/media/media.m4a', MediaTypeEnum::AUDIO);
+$phpevo
+    ->send($instance)
+    ->to($phone)
+    ->media(__DIR__ . '/media/media.m4a', MediaTypeEnum::AUDIO);
 
 /* vídeo */
 $phpevo
-->send($instance)
-->to($phone)
-->caption('Video - Evolution SDK Running...')
-->media(__DIR__ . '/media/media.mp4', MediaTypeEnum::VIDEO);
+    ->send($instance)
+    ->to($phone)
+    ->caption('Video - Evolution SDK Running...')
+    ->media(__DIR__ . '/media/media.mp4', MediaTypeEnum::VIDEO);
 
 /* documents */
 $phpevo
