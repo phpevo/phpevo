@@ -4,6 +4,7 @@ namespace PHPEvo\Services;
 
 use PHPEvo\Services\Enums\MediaTypeEnum;
 use GuzzleHttp\Client;
+use PHPEvo\Services\Traits\HasHttpRequests;
 
 /**
  * Class SendService
@@ -12,6 +13,8 @@ use GuzzleHttp\Client;
  */
 class SendService
 {
+    use HasHttpRequests;
+
     /**
      * SendService constructor.
      *
@@ -32,7 +35,7 @@ class SendService
     }
 
     /**
-     * set to number
+     * set phone number
      *
      * @param string $to
      * @return self
@@ -91,25 +94,12 @@ class SendService
      */
     public function plainText(string $message): array
     {
-        $endpoint = 'message/sendText/' . $this->instance;
+        $url = 'message/sendText/' . $this->instance;
 
-        $response = $this->client->post($endpoint, [
-            'json' => [
-                'number' => $this->to,
-                'text' => $message,
-            ],
+        return $this->post($url, [
+            'number' => $this->to,
+            'text' => $message,
         ]);
-
-        if ($response->getStatusCode()  == 201) {
-            $response = json_decode($response->getBody(), true);
-
-            return $response;
-        }
-
-        return [
-            'error' => 'error',
-            'message' => 'Erro ao enviar mensagem.',
-        ];
     }
 
     /**
@@ -123,22 +113,8 @@ class SendService
     {
         $endpoint = 'message/sendMedia/' . $this->instance;
 
-        if (strpos($media, 'http') === false &&
-            strpos($media, 'https') === false) {
-
-            if (!file_exists($media)) {
-                return [
-                    'error' => 'error',
-                    'message' => 'Arquivo não encontrado.',
-                ];
-            }
-
-            $media = base64_encode(realpath($media));
-        }
-
         $data = [
             'number' => $this->to,
-            'media' => $media,
             'mediatype' => $mediaType->value,
         ];
 
@@ -148,6 +124,31 @@ class SendService
 
         if ($this->fileName && $mediaType == MediaTypeEnum::DOCUMENT) {
             $data['fileName'] = $this->fileName;
+        }
+
+        switch ($mediaType) {
+            case MediaTypeEnum::IMAGE:
+                $data['media'] = $media;
+                break;
+            case MediaTypeEnum::AUDIO:
+                $data['media'] = $media;
+                $data['fileName'] = 'audio.m4a';
+                $data['mediatype'] = 'document';
+                $data['delay'] = 1200;
+                break;
+            case MediaTypeEnum::VIDEO:
+                $endpoint = 'message/sendPtv/' . $this->instance;
+                $data['file'] = $media;
+                $data['delay'] = 1200;
+                break;
+            case MediaTypeEnum::DOCUMENT:
+                $data['document'] = $media;
+                break;
+            default:
+                return [
+                    'error' => 'error',
+                    'message' => 'Tipo de mídia inválido.',
+                ];
         }
 
         $response = $this->client->post($endpoint, [
@@ -164,5 +165,93 @@ class SendService
             'error' => 'error',
             'message' => 'Erro ao enviar mensagem.' . $response->getBody(),
         ];
+    }
+
+    /**
+     * send audio message
+     *
+     * @param string $audio
+     * @return array
+     */
+    public function sendAudio(string $audio): array
+    {
+        $this->checkFileExists($audio);
+
+        $url = 'message/sendWhatsAppAudio/' . $this->instance;
+        $audio = base64_encode(file_get_contents($audio));
+
+        return $this->post($url, [
+            'number' => $this->to,
+            'audio' => $audio,
+        ]);
+    }
+
+    /**
+     * send image message
+     *
+     * @param string $image
+     * @return array
+     */
+    public function sendImage(string $image): array
+    {
+        $this->checkFileExists($image);
+
+        $url = 'message/sendMedia/' . $this->instance;
+        $image = base64_encode(file_get_contents($image));
+
+        $data = [
+            'number' => $this->to,
+            'media' => $image,
+            'mediatype' => 'image',
+            'caption' => $this->caption,
+        ];
+
+        if ($this->caption) {
+            $data['caption'] = $this->caption;
+        }
+
+        return $this->post($url, $data);
+    }
+
+    /**
+     * send video message
+     *
+     * @param string $video
+     * @return array
+     */
+    public function sendVideo(string $video): array
+    {
+        $this->checkFileExists($video);
+
+        $url = 'message/sendPtv/' . $this->instance;
+        $video = base64_encode(file_get_contents($video));
+
+        $data = [
+            'number' => $this->to,
+            'file' => $video,
+            'delay' => 1200,
+        ];
+
+        return $this->post($url, $data);
+    }
+
+    /**
+     * check if file exists
+     *
+     * @param string $file
+     * @return array|boolean
+     */
+    private function checkFileExists(string $file): array|bool
+    {
+        if (! file_exists($file)) {
+            return [
+                'error' => 'error',
+                'message' => 'Arquivo não encontrado.',
+            ];
+
+            exit;
+        }
+
+        return true;
     }
 }
