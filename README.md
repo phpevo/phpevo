@@ -10,12 +10,43 @@ composer require phpevo/phpevo
 
 load Evolution class:
 
+# Resouces
+
+## Instances
+
 ```php
-$phpevo = (new PHPEvo($apiKey, $apiBaseUrl));
-$phpevo = $phpevo->send($instance);
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))
+    ->instance();
 ```
 
-## Resouces
+#### create instance
+
+```php
+$phpevo
+    ->setName('phpevo-instance')
+    ->create();
+```
+
+#### get instances
+
+```php
+$phpevo->getInstances();
+```
+
+#### create instance
+
+```php
+$phpevo
+    ->setName('phpevo-instance')
+    ->connect();
+```
+
+## Media
+
+```php
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))
+    ->send($instance);
+```
 
 #### send plain text:
 

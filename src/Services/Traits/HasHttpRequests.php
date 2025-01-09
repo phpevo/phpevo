@@ -59,4 +59,35 @@ trait HasHttpRequests
             ];
         }
     }
+
+    /**
+     * send DELETE request
+     *
+     * @param string $url
+     * @param array $options
+     * @return array
+     */
+    protected function delete(string $url, array $options = []): array
+    {
+        try {
+            $response = $this->client->delete($url, $options);
+
+            if ($response->getStatusCode()  == 200) {
+                return [
+                    'error' => false,
+                    'message' => 'success',
+                ];
+            }
+
+            return [
+                'error' => true,
+                'message' => 'error',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
 }

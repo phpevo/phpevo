@@ -4,6 +4,7 @@ namespace PHPEvo;
 
 use PHPEvo\Services\SendService;
 use GuzzleHttp\Client;
+use PHPEvo\Services\InstanceService;
 
 class PHPEvo
 {
@@ -34,5 +35,13 @@ class PHPEvo
     public function send(string $instance): SendService
     {
         return new SendService($instance, $this->client);
+    }
+
+    /**
+     * @return InstanceService
+     */
+    public function instance(): InstanceService
+    {
+        return new InstanceService($this->client);
     }
 }

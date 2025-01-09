@@ -110,7 +110,7 @@ class SendService
      * @param string $media
      * @param MediaTypeEnum $mediaType
      * @return array
-     * @deprecated since version 1.0.1
+     * @deprecated since version 1.0
      */
     public function media(string $media, MediaTypeEnum $mediaType): array
     {
@@ -324,5 +324,4 @@ class SendService
 
         return $filePrepared;
     }
-
 }
