@@ -15,30 +15,60 @@ load Evolution class:
 ## Instances
 
 ```php
-$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))
-    ->instance();
+$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
 ```
 
 #### create instance
 
 ```php
 $phpevo
-    ->setName('phpevo-instance')
+    ->instance()
+    ->setName($instanceName)
     ->create();
 ```
 
 #### get instances
 
 ```php
-$phpevo->getInstances();
+$phpevo
+    ->instance()
+    ->getAll();
 ```
 
-#### create instance
+#### connect instance
 
 ```php
 $phpevo
-    ->setName('phpevo-instance')
+    ->instance()
+    ->setName($instanceName)
     ->connect();
+```
+
+#### connection state
+
+```php
+$phpevo
+    ->instance()
+    ->setName($instanceName)
+    ->getState();
+```
+
+#### disconnect instance
+
+```php
+$phpevo
+    ->instance()
+    ->setName($instanceName)
+    ->disconnect();
+```
+
+##### destroy instance
+
+```php
+$phpevo
+    ->instance()
+    ->setName($instanceName)
+    ->destroy();
 ```
 
 ## Media
@@ -81,18 +111,23 @@ $phpevo
 
 #### Instances
 
-- Create Instance
-- Fetch Instances
-- Instance Connect
+- ✅ Create Instance
+- ✅ Fetch Instances
+- ✅ Instance Connect
+- ✅ Connection State
+- ✅ Logout Instance
+- ✅ Delete Instance
 - Restart Instance
-- Connection State
-- Logout Instance
-- Delete Instance
 - Set Presence
 
 #### Send
 
-- Check status
+- ✅ Send plain text
+- ✅ Send image
+- ✅ Send document
+- ✅ Send audio
+- Send video
+- check status
 - Send Location
 - Send List
 - Send Buttons

@@ -26,7 +26,7 @@ $phpevo
     ->connect();
 
 // connection state
-$status = $phpevo
+$phpevo
     ->instance()
     ->setName('phpevo-instance')
     ->getState();
