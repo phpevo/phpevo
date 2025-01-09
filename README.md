@@ -89,24 +89,20 @@ $phpevo
 #### send media:
 
 ```php
-/* image */
 $phpevo
     ->to($phone)
     ->caption('PHPEvo is awesome!')
     ->sendImage(__DIR__ . '/media/media.png');
 
-/* audio */
 $phpevo
     ->to($phone)
     ->sendAudio(__DIR__ . '/media/media.mp3');
 
-/* documents */
 $phpevo
     ->to($phone)
     ->fileName('media.pdf')
     ->sendDocument(__DIR__ . '/media/media.pdf');
 
-/* video */
 $phpevo
     ->to($phone)
     ->caption('PHPEvo is awesome!')
