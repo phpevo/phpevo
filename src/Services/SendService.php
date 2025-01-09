@@ -225,13 +225,19 @@ class SendService
 
         $file = $this->prepareFile($video);
 
-        return $this->post('message/sendMedia/' . $this->instance, [
+        $data = [
             'number' => $this->to,
             'media' => $file->content,
             'mediatype' => 'video',
             'mimetype' => $file->mimeType,
             'fileName' => $file->fileName,
-        ]);
+        ];
+
+        if ($this->caption) {
+            $data['caption'] = $this->caption;
+        }
+
+        return $this->post('message/sendMedia/' . $this->instance, $data);
     }
 
     /**
@@ -283,40 +289,21 @@ class SendService
      */
     private function prepareFile(string $file): object
     {
-        $filePrepared = new stdClass();
-
-        $chunkSize = 1024 * 1024;
-        $base64Chunks = [];
-
-        ini_set('memory_limit', '1024M');
-        ini_set('post_max_size', '300M');
-        ini_set('upload_max_filesize', '300M');
-        ini_set('max_execution_time', 10000);
-
         $handle = fopen($file, 'rb');
 
         if ($handle === false) {
             throw new RuntimeException('Falha ao abrir o arquivo.');
         }
 
-        while (!feof($handle)) {
-            $chunk = fread($handle, $chunkSize);
-
-            if ($chunk === false) {
-                fclose($handle);
-                throw new RuntimeException('Falha ao ler um chunk do arquivo.');
-            }
-
-            $base64Chunks[] = base64_encode($chunk);
-        }
+        $base64File = base64_encode(fread($handle, filesize($file)));
 
         fclose($handle);
-
-        $base64File = implode('', $base64Chunks);
 
         if (!$base64File) {
             throw new RuntimeException('Falha ao codificar o arquivo em Base64.');
         }
+
+        $filePrepared = new stdClass();
 
         $filePrepared->fileName = basename($file);
         $filePrepared->content = $base64File;

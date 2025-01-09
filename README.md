@@ -105,6 +105,12 @@ $phpevo
     ->to($phone)
     ->fileName('media.pdf')
     ->sendDocument(__DIR__ . '/media/media.pdf');
+
+/* video */
+$phpevo
+    ->to($phone)
+    ->caption('PHPEvo is awesome!')
+    ->sendVideo(__DIR__ . '/media/media.mp4');
 ```
 
 ## Roadmap
@@ -126,7 +132,7 @@ $phpevo
 - ✅ Send image
 - ✅ Send document
 - ✅ Send audio
-- Send video
+- ✅ Send video
 - check status
 - Send Location
 - Send List

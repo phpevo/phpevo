@@ -23,7 +23,7 @@ $phpevo
     ->fileName('media.pdf')
     ->sendDocument(__DIR__ . '/media/media.pdf');
 
-// $vid = $phpevo
-//     ->to($phone)
-//     ->caption('PHPEvo is awesome!')
-//     ->sendVideo(__DIR__ . '/media/media.mp4');
+$phpevo
+    ->to($phone)
+    ->caption('PHPEvo is awesome!')
+    ->sendVideo(__DIR__ . '/media/media.mp4');
