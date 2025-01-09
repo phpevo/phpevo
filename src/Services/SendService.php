@@ -5,6 +5,8 @@ namespace PHPEvo\Services;
 use PHPEvo\Services\Enums\MediaTypeEnum;
 use GuzzleHttp\Client;
 use PHPEvo\Services\Traits\HasHttpRequests;
+use RuntimeException;
+use stdClass;
 
 /**
  * Class SendService
@@ -108,6 +110,7 @@ class SendService
      * @param string $media
      * @param MediaTypeEnum $mediaType
      * @return array
+     * @deprecated since version 1.0.1
      */
     public function media(string $media, MediaTypeEnum $mediaType): array
     {
@@ -177,12 +180,11 @@ class SendService
     {
         $this->checkFileExists($audio);
 
-        $url = 'message/sendWhatsAppAudio/' . $this->instance;
-        $audio = base64_encode(file_get_contents($audio));
+        $audio = $this->prepareFile($audio);
 
-        return $this->post($url, [
+        return $this->post('message/sendWhatsAppAudio/' . $this->instance, [
             'number' => $this->to,
-            'audio' => $audio,
+            'audio' => $audio->content,
         ]);
     }
 
@@ -196,21 +198,19 @@ class SendService
     {
         $this->checkFileExists($image);
 
-        $url = 'message/sendMedia/' . $this->instance;
-        $image = base64_encode(file_get_contents($image));
+        $file = $this->prepareFile($image);
 
         $data = [
             'number' => $this->to,
-            'media' => $image,
+            'media' => $file->content,
             'mediatype' => 'image',
-            'caption' => $this->caption,
         ];
 
         if ($this->caption) {
             $data['caption'] = $this->caption;
         }
 
-        return $this->post($url, $data);
+        return $this->post('message/sendMedia/' . $this->instance, $data);
     }
 
     /**
@@ -223,16 +223,36 @@ class SendService
     {
         $this->checkFileExists($video);
 
-        $url = 'message/sendPtv/' . $this->instance;
-        $video = base64_encode(file_get_contents($video));
+        $file = $this->prepareFile($video);
 
-        $data = [
+        return $this->post('message/sendMedia/' . $this->instance, [
             'number' => $this->to,
-            'file' => $video,
-            'delay' => 1200,
-        ];
+            'media' => $file->content,
+            'mediatype' => 'video',
+            'mimetype' => $file->mimeType,
+            'fileName' => $file->fileName,
+        ]);
+    }
 
-        return $this->post($url, $data);
+    /**
+     * send document message
+     *
+     * @param string $document
+     * @return array
+     */
+    public function sendDocument(string $document): array
+    {
+        $this->checkFileExists($document);
+
+        $file = $this->prepareFile($document);
+
+        return $this->post('message/sendMedia/' . $this->instance, [
+            'number' => $this->to,
+            'media' => $file->content,
+            'mediatype' => 'document',
+            'mimetype' => $file->mimeType,
+            'fileName' => $file->fileName,
+        ]);
     }
 
     /**
@@ -254,4 +274,55 @@ class SendService
 
         return true;
     }
+
+    /**
+     * prepare file
+     *
+     * @param string $file
+     * @return object
+     */
+    private function prepareFile(string $file): object
+    {
+        $filePrepared = new stdClass();
+
+        $chunkSize = 1024 * 1024;
+        $base64Chunks = [];
+
+        ini_set('memory_limit', '1024M');
+        ini_set('post_max_size', '300M');
+        ini_set('upload_max_filesize', '300M');
+        ini_set('max_execution_time', 10000);
+
+        $handle = fopen($file, 'rb');
+
+        if ($handle === false) {
+            throw new RuntimeException('Falha ao abrir o arquivo.');
+        }
+
+        while (!feof($handle)) {
+            $chunk = fread($handle, $chunkSize);
+
+            if ($chunk === false) {
+                fclose($handle);
+                throw new RuntimeException('Falha ao ler um chunk do arquivo.');
+            }
+
+            $base64Chunks[] = base64_encode($chunk);
+        }
+
+        fclose($handle);
+
+        $base64File = implode('', $base64Chunks);
+
+        if (!$base64File) {
+            throw new RuntimeException('Falha ao codificar o arquivo em Base64.');
+        }
+
+        $filePrepared->fileName = basename($file);
+        $filePrepared->content = $base64File;
+        $filePrepared->mimeType = mime_content_type($file);
+
+        return $filePrepared;
+    }
+
 }

@@ -1,34 +1,29 @@
 <?php
 
 use PHPEvo\PHPEvo;
-use PHPEvo\Services\Enums\MediaTypeEnum;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 require_once __DIR__ . '/credentials.php';
 
-$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl));
 $phpevo = $phpevo->send($instance);
 
-// $phpevo
-//     ->to($phone)
-//     ->caption('PHPEvo is awesome!')
-//     ->sendImage(__DIR__ . '/media/media.png', MediaTypeEnum::IMAGE);
-
-// $phpevo
-//     ->to($phone)
-//     ->sendAudio(__DIR__ . '/media/media.mp3');
-
-$response = $phpevo
+$phpevo
     ->to($phone)
     ->caption('PHPEvo is awesome!')
-    ->sendVideo(__DIR__ . '/media/media.mp4');
+    ->sendImage(__DIR__ . '/media/media.png');
 
-var_dump($response);
+$phpevo
+    ->to($phone)
+    ->sendAudio(__DIR__ . '/media/media.mp3');
 
-/* documents */
-// $phpevo
-//     ->send($instance)
+$phpevo
+    ->to($phone)
+    ->fileName('media.pdf')
+    ->sendDocument(__DIR__ . '/media/media.pdf');
+
+// $vid = $phpevo
 //     ->to($phone)
-//     ->fileName('media.pdf')
-//     ->media(__DIR__ . '/media/media.pdf', MediaTypeEnum::DOCUMENT);
+//     ->caption('PHPEvo is awesome!')
+//     ->sendVideo(__DIR__ . '/media/media.mp4');

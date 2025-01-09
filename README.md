@@ -11,7 +11,8 @@ composer require phpevo/phpevo
 load Evolution class:
 
 ```php
-$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl));
+$phpevo = $phpevo->send($instance);
 ```
 
 ## Resouces
@@ -20,9 +21,8 @@ $phpevo = new PHPEvo($apiKey, $apiBaseUrl);
 
 ```php
 $phpevo
-    ->send($instanceName)
     ->to($phone)
-    ->plainText($message);
+    ->plainText('PHPEvo is awesome!');
 ```
 
 #### send media:
@@ -30,29 +30,20 @@ $phpevo
 ```php
 /* image */
 $phpevo
-    ->send($instance)
     ->to($phone)
-    ->media(__DIR__ . '/media/media.png', MediaTypeEnum::IMAGE);
+    ->caption('PHPEvo is awesome!')
+    ->sendImage(__DIR__ . '/media/media.png');
 
 /* audio */
-$audio = $phpevo
-    ->send($instance)
-    ->to($phone)
-    ->media(__DIR__ . '/media/media.m4a', MediaTypeEnum::AUDIO);
-
-/* vídeo */
 $phpevo
-    ->send($instance)
     ->to($phone)
-    ->caption('Video - Evolution SDK Running...')
-    ->media(__DIR__ . '/media/media.mp4', MediaTypeEnum::VIDEO);
+    ->sendAudio(__DIR__ . '/media/media.mp3');
 
 /* documents */
 $phpevo
-    ->send($instance)
     ->to($phone)
     ->fileName('media.pdf')
-    ->media(__DIR__ . '/media/media.pdf', MediaTypeEnum::DOCUMENT);
+    ->sendDocument(__DIR__ . '/media/media.pdf');
 ```
 
 ## Roadmap
