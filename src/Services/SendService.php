@@ -2,8 +2,8 @@
 
 namespace PHPEvo\Services;
 
-use PHPEvo\Services\Enums\MediaTypeEnum;
 use GuzzleHttp\Client;
+use PHPEvo\Services\Enums\MediaTypeEnum;
 use PHPEvo\Services\Traits\HasHttpRequests;
 use RuntimeException;
 use stdClass;
@@ -24,15 +24,13 @@ class SendService
      * @param string $to
      * @param string $caption
      * @param string $fileName
-     * @param boolean $mentions
      */
     public function __construct(
         private string $instance,
         private Client $client,
         private string $to = '',
         private string $caption = '',
-        private string $fileName = '',
-        private bool $mentions = false
+        private string $fileName = ''
     ) {
     }
 
@@ -76,19 +74,6 @@ class SendService
     }
 
     /**
-     * set mentions
-     *
-     * @param bool $mentions
-     * @return self
-     */
-    public function mentionsEveryOne(bool $mentions): self
-    {
-        $this->mentions = $mentions;
-
-        return $this;
-    }
-
-    /**
      * send text message
      *
      * @param string $message
@@ -100,7 +85,7 @@ class SendService
 
         return $this->post($url, [
             'number' => $this->to,
-            'text' => $message,
+            'text'   => $message,
         ]);
     }
 
@@ -117,7 +102,7 @@ class SendService
         $endpoint = 'message/sendMedia/' . $this->instance;
 
         $data = [
-            'number' => $this->to,
+            'number'    => $this->to,
             'mediatype' => $mediaType->value,
         ];
 
@@ -132,24 +117,28 @@ class SendService
         switch ($mediaType) {
             case MediaTypeEnum::IMAGE:
                 $data['media'] = $media;
+
                 break;
             case MediaTypeEnum::AUDIO:
-                $data['media'] = $media;
-                $data['fileName'] = 'audio.m4a';
+                $data['media']     = $media;
+                $data['fileName']  = 'audio.m4a';
                 $data['mediatype'] = 'document';
-                $data['delay'] = 1200;
+                $data['delay']     = 1200;
+
                 break;
             case MediaTypeEnum::VIDEO:
-                $endpoint = 'message/sendPtv/' . $this->instance;
-                $data['file'] = $media;
+                $endpoint      = 'message/sendPtv/' . $this->instance;
+                $data['file']  = $media;
                 $data['delay'] = 1200;
+
                 break;
             case MediaTypeEnum::DOCUMENT:
                 $data['document'] = $media;
+
                 break;
             default:
                 return [
-                    'error' => 'error',
+                    'error'   => 'error',
                     'message' => 'Tipo de mídia inválido.',
                 ];
         }
@@ -158,14 +147,14 @@ class SendService
             'json' => $data,
         ]);
 
-        if ($response->getStatusCode()  == 201) {
+        if ($response->getStatusCode() == 201) {
             $response = json_decode($response->getBody(), true);
 
             return $response;
         }
 
         return [
-            'error' => 'error',
+            'error'   => 'error',
             'message' => 'Erro ao enviar mensagem.' . $response->getBody(),
         ];
     }
@@ -184,7 +173,7 @@ class SendService
 
         return $this->post('message/sendWhatsAppAudio/' . $this->instance, [
             'number' => $this->to,
-            'audio' => $audio->content,
+            'audio'  => $audio->content,
         ]);
     }
 
@@ -201,8 +190,8 @@ class SendService
         $file = $this->prepareFile($image);
 
         $data = [
-            'number' => $this->to,
-            'media' => $file->content,
+            'number'    => $this->to,
+            'media'     => $file->content,
             'mediatype' => 'image',
         ];
 
@@ -226,11 +215,11 @@ class SendService
         $file = $this->prepareFile($video);
 
         $data = [
-            'number' => $this->to,
-            'media' => $file->content,
+            'number'    => $this->to,
+            'media'     => $file->content,
             'mediatype' => 'video',
-            'mimetype' => $file->mimeType,
-            'fileName' => $file->fileName,
+            'mimetype'  => $file->mimeType,
+            'fileName'  => $file->fileName,
         ];
 
         if ($this->caption) {
@@ -253,11 +242,11 @@ class SendService
         $file = $this->prepareFile($document);
 
         return $this->post('message/sendMedia/' . $this->instance, [
-            'number' => $this->to,
-            'media' => $file->content,
+            'number'    => $this->to,
+            'media'     => $file->content,
             'mediatype' => 'document',
-            'mimetype' => $file->mimeType,
-            'fileName' => $file->fileName,
+            'mimetype'  => $file->mimeType,
+            'fileName'  => $file->fileName,
         ]);
     }
 
@@ -269,13 +258,11 @@ class SendService
      */
     private function checkFileExists(string $file): array|bool
     {
-        if (! file_exists($file)) {
+        if (!file_exists($file)) {
             return [
-                'error' => 'error',
+                'error'   => 'error',
                 'message' => 'Arquivo não encontrado.',
             ];
-
-            exit;
         }
 
         return true;
@@ -306,7 +293,7 @@ class SendService
         $filePrepared = new stdClass();
 
         $filePrepared->fileName = basename($file);
-        $filePrepared->content = $base64File;
+        $filePrepared->content  = $base64File;
         $filePrepared->mimeType = mime_content_type($file);
 
         return $filePrepared;

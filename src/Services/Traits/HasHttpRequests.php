@@ -13,8 +13,8 @@ trait HasHttpRequests
      * send GET request
      *
      * @param string $url
-     * @param array $options
-     * @return array
+     * @param array<string> $options
+     * @return array<string, mixed>
      */
     protected function get(string $url, array $options = []): array
     {
@@ -24,7 +24,7 @@ trait HasHttpRequests
             return json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             return [
-                'error' => true,
+                'error'   => true,
                 'message' => $e->getMessage(),
             ];
         }
@@ -34,8 +34,8 @@ trait HasHttpRequests
      * send POST request
      *
      * @param string $url
-     * @param array $options
-     * @return array
+     * @param array<string> $options
+     * @return array<string|mixed>
      */
     protected function post(string $url, array $options = []): array
     {
@@ -44,17 +44,26 @@ trait HasHttpRequests
                 'json' => $options,
             ]);
 
-            if ($response->getStatusCode()  == 201) {
+            if ($response->getStatusCode() == 201) {
                 return json_decode($response->getBody()->getContents(), true);
             }
 
             return [
-                'error' => true,
+                'error'   => true,
                 'message' => 'error',
             ];
         } catch (\Exception $e) {
+            if (strpos($e->getMessage(), 'is already in use') !== false) {
+                return [
+                    'error'   => true,
+                    'code'    => 403,
+                    'message' => 'Já existe uma instância com esse nome.' . PHP_EOL . 'Por favor, escolha outro nome.' . PHP_EOL,
+                ];
+            }
+
             return [
-                'error' => true,
+                'error'   => true,
+                'code'    => $e->getCode(),
                 'message' => $e->getMessage(),
             ];
         }
@@ -72,20 +81,20 @@ trait HasHttpRequests
         try {
             $response = $this->client->delete($url, $options);
 
-            if ($response->getStatusCode()  == 200) {
+            if ($response->getStatusCode() == 200) {
                 return [
-                    'error' => false,
+                    'error'   => false,
                     'message' => 'success',
                 ];
             }
 
             return [
-                'error' => true,
+                'error'   => true,
                 'message' => 'error',
             ];
         } catch (\Exception $e) {
             return [
-                'error' => true,
+                'error'   => true,
                 'message' => $e->getMessage(),
             ];
         }

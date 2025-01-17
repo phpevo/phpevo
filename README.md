@@ -15,60 +15,63 @@ load Evolution class:
 ## Instances
 
 ```php
-$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->instance;
+
+$phpevo->setName('phpevo');
 ```
 
 #### create instance
 
 ```php
-$phpevo
-    ->instance()
-    ->setName($instanceName)
-    ->create();
+/**
+ * @return array with key qrcode with base64 image
+ */
+$phpevo->create();
 ```
 
 #### get instances
 
 ```php
-$phpevo
-    ->instance()
-    ->getAll();
+/**
+ * @return array with all instances
+ */
+$phpevo->getAll();
 ```
 
 #### connect instance
 
 ```php
-$phpevo
-    ->instance()
-    ->setName($instanceName)
-    ->connect();
+/**
+ * @return array with key qrcode with base64 image
+ */
+$phpevo->connect();
 ```
 
 #### connection state
 
 ```php
-$phpevo
-    ->instance()
-    ->setName($instanceName)
-    ->getState();
+/**
+ * @return array with state key
+ */
+$phpevo->getState();
 ```
 
 #### disconnect instance
 
 ```php
-$phpevo
-    ->instance()
-    ->setName($instanceName)
-    ->disconnect();
+/**
+ * @return bool
+ */
+$phpevo->disconnect();
 ```
 
 ##### destroy instance
 
 ```php
-$phpevo
-    ->instance()
-    ->setName($instanceName)
-    ->destroy();
+/**
+ * @return bool
+ */
+$phpevo->destroy();
 ```
 
 ## Media

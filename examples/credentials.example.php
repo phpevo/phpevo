@@ -1,7 +1,7 @@
 <?php
 
 $apiBaseUrl = '';
-$apiKey = '';
-$instance = '';
+$apiKey     = '';
+$instance   = '';
 
 $phone = '';

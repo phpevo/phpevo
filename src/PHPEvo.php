@@ -2,9 +2,8 @@
 
 namespace PHPEvo;
 
-use PHPEvo\Services\SendService;
 use GuzzleHttp\Client;
-use PHPEvo\Services\InstanceService;
+use PHPEvo\Services\{InstanceService, SendService};
 
 class PHPEvo
 {
@@ -14,19 +13,34 @@ class PHPEvo
     private Client $client;
 
     /**
+     * @var SendService
+     */
+    public SendService $send;
+
+    /**
+     * @var InstanceService
+     */
+    public InstanceService $instance;
+
+    /**
      * evolution constructor.
      */
     public function __construct(
-        private string $apiKey,
-        private string $baseUrl
+        string $apiKey,
+        string $baseUrl,
+        string $instanceName = 'whatsapp'
     ) {
         $this->client = new Client([
-            'base_uri' => $this->baseUrl,
-            'headers' => [
+            'base_uri' => $baseUrl,
+            'headers'  => [
                 'content-type' => 'application/json',
-                'apiKey' => $apiKey,
-            ]
+                'apiKey'       => $apiKey,
+            ],
         ]);
+
+        $this->instance = new InstanceService($this->client);
+
+        $this->send = new SendService($instanceName, $this->client);
     }
 
     /**
