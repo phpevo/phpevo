@@ -2,4 +2,5 @@
     "cSpell.enabled": false,
     "editor.fontFamily": "JetBrains Mono",
     "material-icon-theme.activeIconPack": "react_redux",
+    "jira-plugin.workingProject": "",
 }

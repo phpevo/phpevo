@@ -2,12 +2,9 @@
 
 namespace PHPEvo\Services;
 
-use GuzzleHttp\Client;
-use PHPEvo\Services\Traits\HasHttpRequests;
-
-class InstanceService
+class InstanceService implements Interfaces\InstanceServiceInterface
 {
-    use HasHttpRequests;
+    use Traits\HasHttpRequests;
 
     /**
      * @var string
@@ -15,17 +12,17 @@ class InstanceService
     private string $name;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private array $instance;
 
     /**
      * InstanceService constructor.
      *
-     * @param Client $client
+     * @param \GuzzleHttp\Client $client
      */
     public function __construct(
-        private Client $client,
+        private \GuzzleHttp\Client $client,
     ) {
     }
 
@@ -43,21 +40,29 @@ class InstanceService
     }
 
     /**
-     * create instance
+     * Create instance
      *
-     * @return array|self
+     * @return array<string, mixed>
      */
-    public function create(): array|self
+    public function create(): array
     {
+        if (empty($this->name)) {
+            throw new \Exception('Instance name is required.');
+        }
+
         $instance = $this->post('instance/create', [
             'instanceName' => $this->name,
-            'qrcode' => true,
-            'integration' => 'WHATSAPP-BAILEYS' // WHATSAPP-BAILEYS | WHATSAPP-BUSINESS | EVOLUTION (Default WHATSAPP-BAILEYS)
+            'qrcode'       => true,
+            'integration'  => 'WHATSAPP-BAILEYS', // WHATSAPP-BAILEYS | WHATSAPP-BUSINESS | EVOLUTION (Default WHATSAPP-BAILEYS)
         ]);
 
-        $this->instance = $instance;
+        if (array_key_exists('error', $instance)) {
+            throw new \Exception($instance['message']);
+        }
 
-        return $this;
+        $this->instance = $this->formatResponseInstance($instance);
+
+        return $this->instance;
     }
 
     /**
@@ -75,31 +80,49 @@ class InstanceService
      *
      * @return array
      */
-    public function connect(): string
+    public function connect(): array
     {
-        $instance = $this->get('instance/connect/' . $this->name);
+        if (empty($this->name)) {
+            throw new \Exception('Instance name is required.');
+        }
 
-        return $this->generateQrCode($instance);
+        $response = $this->get('instance/connect/' . $this->name);
+
+        return [
+            'qrcode' => $response['base64'],
+        ];
     }
 
     /**
      * disconnect instance
      *
-     * @return array
+     * @return bool
      */
-    public function disconnect(): array
+    public function disconnect(): bool
     {
-        return $this->delete('instance/logout/' . $this->name);
+        if (empty($this->name)) {
+            throw new \Exception('Instance name is required.');
+        }
+
+        $response = $this->delete('instance/logout/' . $this->name);
+
+        return  $response['message'] == 'success';
     }
 
     /**
      * destroy instance
      *
-     * @return array
+     * @return bool
      */
-    public function destroy(): array
+    public function destroy(): bool
     {
-        return $this->delete('instance/delete/' . $this->name);
+        if (empty($this->name)) {
+            throw new \Exception('Instance name is required.');
+        }
+
+        $response = $this->delete('instance/delete/' . $this->name);
+
+        return $response['message'] == 'success';
     }
 
     /**
@@ -109,38 +132,27 @@ class InstanceService
      */
     public function getState(): array
     {
-        return $this->get('instance/connectionState/' . $this->name);
+        if (empty($this->name)) {
+            throw new \Exception('Instance name is required.');
+        }
+
+        $state = $this->get('instance/connectionState/' . $this->name);
+
+        return [
+            'state' => $state['instance']['state'],
+        ];
     }
 
     /**
-     * generate QR code
+     * format response instance
      *
      * @param array $instance
-     * @return string
+     * @return array
      */
-    private function generateQrCode(array $instance): string
+    private function formatResponseInstance(array $instance): array
     {
-        $filePath = __DIR__ . '/Temp/qrcode.png';
-
-        if (!is_dir(__DIR__ . '/Temp')) {
-            mkdir(__DIR__ . '/Temp');
-        }
-
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
-        $qrcode = preg_replace('/^data:image\/\w+;base64,/', '', $instance['base64']);
-        $qrcode = base64_decode($qrcode);
-
-        if ($qrcode === false) {
-            die('Falha ao decodificar a string Base64.');
-        }
-
-        if (file_put_contents($filePath, $qrcode) === false) {
-            die('Falha ao salvar a imagem PNG.');
-        }
-
-        return $filePath;
+        return [
+            'qrcode' => $instance['qrcode']['base64'],
+        ];
     }
 }

@@ -1,44 +1,51 @@
 <?php
 
-use PHPEvo\PHPEvo;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 require_once __DIR__ . '/credentials.php';
 
-$phpevo = new PHPEvo($apiKey, $apiBaseUrl);
+use PHPEvo\PHPEvo;
 
-// create instance
-$phpevo
-    ->instance()
-    ->setName('phpevo-instance')
-    ->create();
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->instance;
 
-// list instances
-$phpevo
-    ->instance()
-    ->getAll();
+/**
+ * set instance name
+ *
+ * @return PHPEvo
+ */
+$phpevo->setName('phpevo');
 
-// respond with path temp qrcode
-$phpevo
-    ->instance()
-    ->setName('phpevo-instance')
-    ->connect();
+/**
+ * create instance
+ *
+ * @return array with key qrcode with base64 image
+ */
+$phpevo->create();
 
-// connection state
-$phpevo
-    ->instance()
-    ->setName('phpevo-instance')
-    ->getState();
+/**
+ * connect instance
+ *
+ * @return array with key qrcode with base64 image
+ */
+$phpevo->connect();
 
-// respond with path temp qrcode
-$phpevo
-    ->instance()
-    ->setName('phpevo-instance')
-    ->disconnect();
+/**
+ * get state of instance
+ *
+ * @return array with state key
+ */
+$phpevo->getState();
 
-// destroy instance
-$phpevo
-    ->instance()
-    ->setName('phpevo-instance')
-    ->destroy();
+/**
+ * disconnect instance
+ *
+ * @return bool
+ */
+$phpevo->disconnect();
+
+/**
+ * destroy instance
+ *
+ * @return bool
+ */
+$phpevo->destroy();
