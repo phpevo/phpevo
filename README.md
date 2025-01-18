@@ -78,7 +78,8 @@ $phpevo->destroy();
 
 ```php
 $phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->send;
-$phpevo = $phpevo
+
+$phpevo
     ->setInstance($instance)
     ->to($phone);
 ```
