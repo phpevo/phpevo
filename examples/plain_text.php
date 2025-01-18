@@ -12,8 +12,6 @@ $phpevo
     ->to($phone);
 
 /**
- * send plain text message
- *
  * @return array
  */
 $phpevo->text($message, $params);
