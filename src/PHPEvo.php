@@ -8,11 +8,6 @@ use PHPEvo\Services\{InstanceService, SendService};
 class PHPEvo
 {
     /**
-     * @var Client
-     */
-    private Client $client;
-
-    /**
      * @var SendService
      */
     public SendService $send;
@@ -27,10 +22,9 @@ class PHPEvo
      */
     public function __construct(
         string $apiKey,
-        string $baseUrl,
-        string $instanceName = 'whatsapp'
+        string $baseUrl
     ) {
-        $this->client = new Client([
+        $client = new Client([
             'base_uri' => $baseUrl,
             'headers'  => [
                 'content-type' => 'application/json',
@@ -38,24 +32,8 @@ class PHPEvo
             ],
         ]);
 
-        $this->instance = new InstanceService($this->client);
+        $this->instance = new InstanceService($client);
 
-        $this->send = new SendService($instanceName, $this->client);
-    }
-
-    /**
-     * @return SendService
-     */
-    public function send(string $instance): SendService
-    {
-        return new SendService($instance, $this->client);
-    }
-
-    /**
-     * @return InstanceService
-     */
-    public function instance(): InstanceService
-    {
-        return new InstanceService($this->client);
+        $this->send = new SendService($client);
     }
 }

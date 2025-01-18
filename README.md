@@ -77,39 +77,44 @@ $phpevo->destroy();
 ## Media
 
 ```php
-$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))
-    ->send($instance);
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->send;
+
+$phpevo
+    ->setInstance($instance)
+    ->to($phone);
 ```
 
-#### send plain text:
+#### send text:
 
 ```php
-$phpevo
-    ->to($phone)
-    ->plainText('PHPEvo is awesome!');
+/**
+ * @return array
+ */
+$phpevo->text($message, $params);
 ```
 
 #### send media:
 
 ```php
-$phpevo
-    ->to($phone)
-    ->caption('PHPEvo is awesome!')
-    ->sendImage(__DIR__ . '/media/media.png');
+/**
+ * @return array
+ */
+$phpevo->sendImage($imagePath);
 
-$phpevo
-    ->to($phone)
-    ->sendAudio(__DIR__ . '/media/media.mp3');
+/**
+ * @return array
+ */
+$phpevo->sendAudio($audioPath);
 
-$phpevo
-    ->to($phone)
-    ->fileName('media.pdf')
-    ->sendDocument(__DIR__ . '/media/media.pdf');
+/**
+ * @return array
+ */
+$phpevo->sendDocument($documentPath);
 
-$phpevo
-    ->to($phone)
-    ->caption('PHPEvo is awesome!')
-    ->sendVideo(__DIR__ . '/media/media.mp4');
+/**
+ * @return array
+ */
+$phpevo->sendVideo($videoPath);
 ```
 
 ## Roadmap
