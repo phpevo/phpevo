@@ -18,15 +18,19 @@ class SendService
     use HasHttpRequests;
 
     /**
+     * @var string
+     */
+    private string $instance;
+
+    /**
      * SendService constructor.
      *
-     * @param string $instance
+     * @param Client $client
      * @param string $to
      * @param string $caption
      * @param string $fileName
      */
     public function __construct(
-        private string $instance,
         private Client $client,
         private string $to = '',
         private string $caption = '',
@@ -61,6 +65,19 @@ class SendService
     }
 
     /**
+     * set instance
+     *
+     * @param string $instance
+     * @return self
+     */
+    public function setInstance(string $instance): self
+    {
+        $this->instance = $instance;
+
+        return $this;
+    }
+
+    /**
      * set file name
      *
      * @param string $fileName
@@ -78,6 +95,7 @@ class SendService
      *
      * @param string $message
      * @return array
+     * @deprecated use text method instead
      */
     public function plainText(string $message): array
     {
@@ -87,6 +105,27 @@ class SendService
             'number' => $this->to,
             'text'   => $message,
         ]);
+    }
+
+    /**
+     * send text message
+     *
+     * @param string $message
+     * @param array<mixed> $params
+     *    - delay (int): Tempo de espera antes do envio (ms).
+     *    - linkPreview (bool): Habilitar/Desabilitar prévia de links.
+     *    - mentioned (string): Mencionar um usuário específico.
+     *    - mentionsEveryOne (bool): Mencionar todos os usuários.
+     * @return array
+     */
+    public function text(string $message, array $params = []): array
+    {
+        $data = array_merge([
+            'number' => $this->to,
+            'text'   => $message,
+        ], $params);
+
+        return $this->post('message/sendText/' . $this->instance, $data);
     }
 
     /**
