@@ -4,7 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\MediaTypeEnum;
-use PHPEvo\Services\Traits\HasHttpRequests;
+use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 use RuntimeException;
 use stdClass;
 
@@ -16,11 +16,7 @@ use stdClass;
 class SendService
 {
     use HasHttpRequests;
-
-    /**
-     * @var string
-     */
-    private string $instance;
+    use InteractWithInstance;
 
     /**
      * SendService constructor.
@@ -60,19 +56,6 @@ class SendService
     public function caption(string $caption): self
     {
         $this->caption = $caption;
-
-        return $this;
-    }
-
-    /**
-     * set instance
-     *
-     * @param string $instance
-     * @return self
-     */
-    public function setInstance(string $instance): self
-    {
-        $this->instance = $instance;
 
         return $this;
     }
