@@ -6,7 +6,6 @@ use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
 use PHPEvo\Services\Models\ContactMessage;
 use PHPEvo\Services\Traits\HasHttpRequests;
-use RuntimeException;
 use stdClass;
 
 /**
@@ -302,22 +301,23 @@ class SendService
     public function sendContact(ContactMessage $contact, ?array $options = null): array
     {
         if (isset($options['presence']) && !PresenceTypeEnum::isValid($options['presence'])) {
-            throw new RuntimeException('Tipo de presença inválido.');
+            throw new \RuntimeException('Tipo de presença inválido.');
         }
+
+        // When field is empty, it will be removed from the array
+        $contactMessage = array_filter([
+            'fullName'     => $contact->fullName,
+            'wuid'         => $contact->wuid,
+            'phoneNumber'  => $contact->phoneNumber,
+            'organization' => $contact->organization,
+            'email'        => $contact->email,
+            'url'          => $contact->url,
+        ], fn ($value) => !empty($value));
 
         $data = [
             'number'         => $this->to,
             'options'        => $options,
-            'contactMessage' => [
-                [
-                    'fullName'     => $contact->fullName,
-                    'wuid'         => $contact->wuid,
-                    'phoneNumber'  => $contact->phoneNumber,
-                    'organization' => $contact->organization,
-                    'email'        => $contact->email,
-                    'url'          => $contact->url,
-                ],
-            ],
+            'contactMessage' => [$contactMessage],
         ];
 
         return $this->post('message/sendContact/' . $this->instance, $data);
@@ -352,7 +352,7 @@ class SendService
         $handle = fopen($file, 'rb');
 
         if ($handle === false) {
-            throw new RuntimeException('Falha ao abrir o arquivo.');
+            throw new \RuntimeException('Falha ao abrir o arquivo.');
         }
 
         $base64File = base64_encode(fread($handle, filesize($file)));
@@ -360,7 +360,7 @@ class SendService
         fclose($handle);
 
         if (!$base64File) {
-            throw new RuntimeException('Falha ao codificar o arquivo em Base64.');
+            throw new \RuntimeException('Falha ao codificar o arquivo em Base64.');
         }
 
         $filePrepared = new stdClass();
