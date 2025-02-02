@@ -6,6 +6,9 @@ enum PresenceTypeEnum: string
 {
     case COMPOSING = 'composing';
 
+    /**
+     * @return array<string>
+     */
     public static function toArray(): array
     {
         return [

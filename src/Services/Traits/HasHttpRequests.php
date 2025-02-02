@@ -13,7 +13,7 @@ trait HasHttpRequests
      * send GET request
      *
      * @param string $url
-     * @param array<string> $options
+     * @param array<mixed, mixed> $options
      * @return array<string, mixed>
      */
     protected function get(string $url, array $options = []): array
@@ -21,6 +21,7 @@ trait HasHttpRequests
         try {
             $response = $this->client->get($url, $options);
 
+            /** @var array<string, mixed> */
             return json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             return [
@@ -34,7 +35,7 @@ trait HasHttpRequests
      * send POST request
      *
      * @param string $url
-     * @param array<string> $options
+     * @param array<mixed, mixed> $options
      * @return array<string|mixed>
      */
     protected function post(string $url, array $options = []): array
@@ -45,6 +46,7 @@ trait HasHttpRequests
             ]);
 
             if ($response->getStatusCode() == 201) {
+                /** @var array<string, mixed> */
                 return json_decode($response->getBody()->getContents(), true);
             }
 
@@ -73,8 +75,8 @@ trait HasHttpRequests
      * send DELETE request
      *
      * @param string $url
-     * @param array $options
-     * @return array
+     * @param array<mixed, mixed> $options
+     * @return array<string,mixed>
      */
     protected function delete(string $url, array $options = []): array
     {
