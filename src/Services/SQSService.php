@@ -8,7 +8,7 @@ use PHPEvo\Services\Enums\ValidEvents;
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
- * Class SendService
+ * Class SQSService
  *
  * @package Evolution\Services
  */
@@ -31,7 +31,8 @@ class SQSService
      * Set SQS in our instance
      *
      * @param bool $enable
-     * @param array<string> $events
+     * @param array<string> $events Events to be sent to the Webhook
+     * @throws InvalidArgumentException If an invalid event is provided
      * @return array
      */
     public function setSQS(bool $enable = true, array $events = []): array
@@ -59,6 +60,6 @@ class SQSService
      */
     public function getSQS(): array
     {
-        return $this->get('sqs/get/' . $this->instance);
+        return $this->get('sqs/find/' . $this->instance);
     }
 }
