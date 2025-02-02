@@ -26,6 +26,9 @@ enum ValidEvents: string
     case CALL                      = 'CALL';
     case NEW_JWT_TOKEN             = 'NEW_JWT_TOKEN';
 
+    /**
+     * @return array<string>
+     */
     public static function toArray(): array
     {
         return [

@@ -20,7 +20,8 @@
     "require": {
         "php": "^8.1",
         "ext-curl": "*",
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "ext-fileinfo": "*"
     },
     "license": "MIT",
     "autoload": {

@@ -4,7 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
-use PHPEvo\Services\Models\ContactMessage;
+use PHPEvo\Services\Models\{ContactMessage, PreparedFile};
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
@@ -76,7 +76,7 @@ class SendService
      * send text message
      *
      * @param string $message
-     * @return array
+     * @return array<string, mixed>
      * @deprecated use text method instead
      */
     public function plainText(string $message): array
@@ -93,12 +93,12 @@ class SendService
      * send text message
      *
      * @param string $message
-     * @param array<mixed> $params
+     * @param array<mixed, mixed> $params
      *    - delay (int): Tempo de espera antes do envio (ms).
      *    - linkPreview (bool): Habilitar/Desabilitar prévia de links.
      *    - mentioned (string): Mencionar um usuário específico.
      *    - mentionsEveryOne (bool): Mencionar todos os usuários.
-     * @return array
+     * @return array<string, mixed>
      */
     public function text(string $message, array $params = []): array
     {
@@ -115,7 +115,7 @@ class SendService
      *
      * @param string $media
      * @param MediaTypeEnum $mediaType
-     * @return array
+     * @return array<string, mixed>
      * @deprecated since version 1.0
      */
     public function media(string $media, MediaTypeEnum $mediaType): array
@@ -169,9 +169,8 @@ class SendService
         ]);
 
         if ($response->getStatusCode() == 201) {
-            $response = json_decode($response->getBody(), true);
-
-            return $response;
+            /** @var array<string, mixed> */
+            return json_decode($response->getBody(), true);
         }
 
         return [
@@ -184,7 +183,7 @@ class SendService
      * send audio message
      *
      * @param string $audio
-     * @return array
+     * @return array<string, mixed>
      */
     public function sendAudio(string $audio): array
     {
@@ -202,7 +201,7 @@ class SendService
      * send image message
      *
      * @param string $image
-     * @return array
+     * @return array<string, mixed>
      */
     public function sendImage(string $image): array
     {
@@ -227,7 +226,7 @@ class SendService
      * send video message
      *
      * @param string $video
-     * @return array
+     * @return array<string, mixed>
      */
     public function sendVideo(string $video): array
     {
@@ -254,7 +253,7 @@ class SendService
      * send document message
      *
      * @param string $document
-     * @return array
+     * @return array<string, mixed>
      */
     public function sendDocument(string $document): array
     {
@@ -275,14 +274,14 @@ class SendService
      * send contact message
      *
      * @param ContactMessage $contact
-     * @param array|null $options
+     * @param array<string, mixed>|null $options
      *  - delay (int): Tempo de espera antes do envio (ms).
      *  - presence (PresenceTypeEnum): Tipo de presença a ser exibido
-     * @return array
+     * @return array<string, mixed>
      */
     public function sendContact(ContactMessage $contact, ?array $options = null): array
     {
-        if (isset($options['presence']) && !PresenceTypeEnum::isValid($options['presence'])) {
+        if (isset($options['presence']) && is_string($options['presence']) && !PresenceTypeEnum::isValid($options['presence'])) {
             throw new \RuntimeException('Tipo de presença inválido.');
         }
 
@@ -309,7 +308,7 @@ class SendService
      * check if file exists
      *
      * @param string $file
-     * @return array|boolean
+     * @return array<string, string>|boolean
      */
     private function checkFileExists(string $file): array|bool
     {
@@ -327,30 +326,32 @@ class SendService
      * prepare file
      *
      * @param string $file
-     * @return object
+     * @return PreparedFile
      */
-    private function prepareFile(string $file): object
+    private function prepareFile(string $file): PreparedFile
     {
-        $handle = fopen($file, 'rb');
-
-        if ($handle === false) {
-            throw new \RuntimeException('Falha ao abrir o arquivo.');
+        if (!is_readable($file)) {
+            throw new \RuntimeException("Arquivo não pode ser lido: {$file}");
         }
 
-        $base64File = base64_encode(fread($handle, filesize($file)));
+        $content = file_get_contents($file);
 
-        fclose($handle);
-
-        if (!$base64File) {
-            throw new \RuntimeException('Falha ao codificar o arquivo em Base64.');
+        if ($content === false) {
+            throw new \RuntimeException("Erro ao ler o arquivo: {$file}");
         }
 
-        $filePrepared = new \stdClass();
+        $base64File = base64_encode($content);
 
-        $filePrepared->fileName = basename($file);
-        $filePrepared->content  = $base64File;
-        $filePrepared->mimeType = mime_content_type($file);
+        $mime = mime_content_type($file);
 
-        return $filePrepared;
+        if ($mime === false) {
+            throw new \RuntimeException("Erro ao obter o tipo MIME do arquivo.");
+        }
+
+        return new PreparedFile(
+            fileName: basename($file),
+            content: $base64File,
+            mimeType: $mime,
+        );
     }
 }

@@ -50,6 +50,7 @@ class InstanceService implements Interfaces\InstanceServiceInterface
             throw new \Exception('Instance name is required.');
         }
 
+        /** @var array<string, array<string, mixed>> $instance */
         $instance = $this->post('instance/create', [
             'instanceName' => $this->name,
             'qrcode'       => true,
@@ -57,7 +58,10 @@ class InstanceService implements Interfaces\InstanceServiceInterface
         ]);
 
         if (array_key_exists('error', $instance)) {
-            throw new \Exception($instance['message']);
+            /** @var string $error */
+            $error = $instance['error'];
+
+            throw new \Exception($error);
         }
 
         $this->instance = $this->formatResponseInstance($instance);
@@ -68,7 +72,7 @@ class InstanceService implements Interfaces\InstanceServiceInterface
     /**
      * get instance
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function getAll(): array
     {
@@ -78,7 +82,7 @@ class InstanceService implements Interfaces\InstanceServiceInterface
     /**
      * connect instance
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function connect(): array
     {
@@ -128,7 +132,7 @@ class InstanceService implements Interfaces\InstanceServiceInterface
     /**
      * get connection state
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getState(): array
     {
@@ -136,6 +140,7 @@ class InstanceService implements Interfaces\InstanceServiceInterface
             throw new \Exception('Instance name is required.');
         }
 
+        /** @var array<string, array<string, mixed>> $state */
         $state = $this->get('instance/connectionState/' . $this->name);
 
         return [
@@ -146,8 +151,8 @@ class InstanceService implements Interfaces\InstanceServiceInterface
     /**
      * format response instance
      *
-     * @param array $instance
-     * @return array
+     * @param array<string, array<string, mixed>> $instance
+     * @return array<string, mixed>
      */
     private function formatResponseInstance(array $instance): array
     {

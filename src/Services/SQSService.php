@@ -33,7 +33,7 @@ class SQSService implements EventServiceInterface
      * @param bool $enable
      * @param array<string> $events Events to be sent to the Webhook
      * @throws \InvalidArgumentException If an invalid event is provided
-     * @return array
+     * @return array<string, mixed>
      */
     public function set(bool $enable = true, array $events = []): array
     {
@@ -52,7 +52,7 @@ class SQSService implements EventServiceInterface
     /**
      * Find SQS in our instance
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function find(): array
     {
