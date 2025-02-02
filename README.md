@@ -115,6 +115,11 @@ $phpevo->sendDocument($documentPath);
  * @return array
  */
 $phpevo->sendVideo($videoPath);
+
+/**
+ * @return array
+ */
+$phpevo->sendContact(new ContactMessage($phone, $nonStylizedPhone), $options);
 ```
 
 ## Roadmap
