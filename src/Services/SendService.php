@@ -5,8 +5,7 @@ namespace PHPEvo\Services;
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
 use PHPEvo\Services\Models\ContactMessage;
-use PHPEvo\Services\Traits\HasHttpRequests;
-use stdClass;
+use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
  * Class SendService
@@ -16,11 +15,7 @@ use stdClass;
 class SendService
 {
     use HasHttpRequests;
-
-    /**
-     * @var string
-     */
-    private string $instance;
+    use InteractWithInstance;
 
     /**
      * SendService constructor.
@@ -60,19 +55,6 @@ class SendService
     public function caption(string $caption): self
     {
         $this->caption = $caption;
-
-        return $this;
-    }
-
-    /**
-     * set instance
-     *
-     * @param string $instance
-     * @return self
-     */
-    public function setInstance(string $instance): self
-    {
-        $this->instance = $instance;
 
         return $this;
     }
@@ -363,7 +345,7 @@ class SendService
             throw new \RuntimeException('Falha ao codificar o arquivo em Base64.');
         }
 
-        $filePrepared = new stdClass();
+        $filePrepared = new \stdClass();
 
         $filePrepared->fileName = basename($file);
         $filePrepared->content  = $base64File;
