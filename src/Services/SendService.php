@@ -3,7 +3,7 @@
 namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
-use PHPEvo\Services\Enums\MediaTypeEnum;
+use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
 use PHPEvo\Services\Models\ContactMessage;
 use PHPEvo\Services\Traits\HasHttpRequests;
 use RuntimeException;
@@ -296,13 +296,14 @@ class SendService
      * @param ContactMessage $contact
      * @param array|null $options
      *  - delay (int): Tempo de espera antes do envio (ms).
-     *  - presence (PresenceTypeEnum): Tipo de presença a ser exibido (Opções disponíveis: composing).
+     *  - presence (PresenceTypeEnum): Tipo de presença a ser exibido
      * @return array
      */
     public function sendContact(ContactMessage $contact, ?array $options = null): array
     {
-        //Se tiver presence valida se é um valor válido
-
+        if (isset($options['presence']) && !PresenceTypeEnum::isValid($options['presence'])) {
+            throw new RuntimeException('Tipo de presença inválido.');
+        }
 
         $data = [
             'number'         => $this->to,
