@@ -3,10 +3,8 @@
 namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
-use InvalidArgumentException;
-use PHPEvo\Services\Enums\ValidEvents;
 use PHPEvo\Services\Interfaces\EventServiceInterface;
-use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance, ValidatesEvents};
+use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance, ValidateEvents};
 
 /**
  * Class SQSService
@@ -17,7 +15,7 @@ class SQSService implements EventServiceInterface
 {
     use HasHttpRequests;
     use InteractWithInstance;
-    use ValidatesEvents;
+    use ValidateEvents;
 
     /**
      * SQSService constructor.
@@ -34,7 +32,7 @@ class SQSService implements EventServiceInterface
      *
      * @param bool $enable
      * @param array<string> $events Events to be sent to the Webhook
-     * @throws InvalidArgumentException If an invalid event is provided
+     * @throws \InvalidArgumentException If an invalid event is provided
      * @return array
      */
     public function set(bool $enable = true, array $events = []): array

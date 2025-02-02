@@ -5,7 +5,6 @@ namespace PHPEvo\Services;
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\MediaTypeEnum;
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
-use RuntimeException;
 use stdClass;
 
 /**
@@ -301,7 +300,7 @@ class SendService
         $handle = fopen($file, 'rb');
 
         if ($handle === false) {
-            throw new RuntimeException('Falha ao abrir o arquivo.');
+            throw new \RuntimeException('Falha ao abrir o arquivo.');
         }
 
         $base64File = base64_encode(fread($handle, filesize($file)));
@@ -309,7 +308,7 @@ class SendService
         fclose($handle);
 
         if (!$base64File) {
-            throw new RuntimeException('Falha ao codificar o arquivo em Base64.');
+            throw new \RuntimeException('Falha ao codificar o arquivo em Base64.');
         }
 
         $filePrepared = new stdClass();
