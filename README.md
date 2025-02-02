@@ -117,7 +117,7 @@ $phpevo->sendDocument($documentPath);
 $phpevo->sendVideo($videoPath);
 ```
 
-#### Interact with SQS:
+## SQS
 
 ```php
 $phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->sqs;
@@ -129,6 +129,8 @@ $phpevo->setInstance($instance);
 
 ```php
 /**
+ * @param bool $enabled
+ * @param array $events (See [all valid events](./src/Services/Enums/ValidEvents.php))
  * @return array
  */
 $phpevo->setSQS($enabled, $events);
@@ -141,6 +143,34 @@ $phpevo->setSQS($enabled, $events);
  * @return array
  */
 $phpevo->getSQS();
+```
+
+## RabbitMQ
+
+```php
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->rabbit;
+
+$phpevo->setInstance($instance);
+```
+
+#### set RabbitMQ:
+
+```php
+/**
+ * @param bool $enabled
+ * @param array $events (See [all valid events](./src/Services/Enums/ValidEvents.php))
+ * @return array
+ */
+$phpevo->setRabbit($enabled, $events);
+```
+
+#### get RabbitMQ:
+
+```php
+/**
+ * @return array
+ */
+$phpevo->getRabbit();
 ```
 
 ## Roadmap
