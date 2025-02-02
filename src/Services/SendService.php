@@ -4,6 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\MediaTypeEnum;
+use PHPEvo\Services\Models\ContactMessage;
 use PHPEvo\Services\Traits\HasHttpRequests;
 use RuntimeException;
 use stdClass;
@@ -287,6 +288,38 @@ class SendService
             'mimetype'  => $file->mimeType,
             'fileName'  => $file->fileName,
         ]);
+    }
+
+    /**
+     * send contact message
+     *
+     * @param ContactMessage $contact
+     * @param array|null $options
+     *  - delay (int): Tempo de espera antes do envio (ms).
+     *  - presence (PresenceTypeEnum): Tipo de presença a ser exibido (Opções disponíveis: composing).
+     * @return array
+     */
+    public function sendContact(ContactMessage $contact, ?array $options = null): array
+    {
+        //Se tiver presence valida se é um valor válido
+
+
+        $data = [
+            'number'         => $this->to,
+            'options'        => $options,
+            'contactMessage' => [
+                [
+                    'fullName'     => $contact->fullName,
+                    'wuid'         => $contact->wuid,
+                    'phoneNumber'  => $contact->phoneNumber,
+                    'organization' => $contact->organization,
+                    'email'        => $contact->email,
+                    'url'          => $contact->url,
+                ],
+            ],
+        ];
+
+        return $this->post('message/sendContact/' . $this->instance, $data);
     }
 
     /**
