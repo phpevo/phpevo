@@ -3,7 +3,7 @@
 namespace PHPEvo;
 
 use GuzzleHttp\Client;
-use PHPEvo\Services\{InstanceService, SendService};
+use PHPEvo\Services\{InstanceService, RabbitService, SQSService, SendService, WebSocketService};
 
 class PHPEvo
 {
@@ -16,6 +16,21 @@ class PHPEvo
      * @var InstanceService
      */
     public InstanceService $instance;
+
+    /**
+     * @var SQSService
+     */
+    public SQSService $sqs;
+
+    /**
+     * @var RabbitService
+     */
+    public RabbitService $rabbit;
+
+    /**
+     * @var WebSocketService
+     */
+    public WebSocketService $websocket;
 
     /**
      * evolution constructor.
@@ -35,5 +50,11 @@ class PHPEvo
         $this->instance = new InstanceService($client);
 
         $this->send = new SendService($client);
+
+        $this->sqs = new SQSService($client);
+
+        $this->rabbit = new RabbitService($client);
+
+        $this->websocket = new WebSocketService($client);
     }
 }

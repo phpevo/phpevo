@@ -117,6 +117,92 @@ $phpevo->sendDocument($documentPath);
 $phpevo->sendVideo($videoPath);
 ```
 
+## Events
+
+### WebSockets
+
+```php
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->websocket;
+
+$phpevo->setInstance($instance);
+```
+
+#### Set WebSockets:
+
+```php
+/**
+ * @param bool $enabled
+ * @param array $events (See [all valid events](./src/Services/Enums/ValidEvents.php))
+ * @return array
+ */
+$phpevo->set($enabled, $events);
+```
+
+#### Get WebSockets:
+
+```php
+/**
+ * @return array
+ */
+$phpevo->find();
+```
+
+
+### SQS
+```php
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->sqs;
+
+$phpevo->setInstance($instance);
+```
+
+#### Set SQS:
+
+```php
+/**
+ * @param bool $enabled
+ * @param array $events (See [all valid events](./src/Services/Enums/ValidEvents.php))
+ * @return array
+ */
+$phpevo->set($enabled, $events);
+```
+
+#### Get SQS:
+
+```php
+/**
+ * @return array
+ */
+$phpevo->find();
+```
+
+### RabbitMQ
+
+```php
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->rabbit;
+
+$phpevo->setInstance($instance);
+```
+
+#### Set RabbitMQ:
+
+```php
+/**
+ * @param bool $enabled
+ * @param array $events (See [all valid events](./src/Services/Enums/ValidEvents.php))
+ * @return array
+ */
+$phpevo->set($enabled, $events);
+```
+
+#### Get RabbitMQ:
+
+```php
+/**
+ * @return array
+ */
+$phpevo->find();
+```
+
 ## Roadmap
 
 #### Instances
