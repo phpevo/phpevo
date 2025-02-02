@@ -117,6 +117,32 @@ $phpevo->sendDocument($documentPath);
 $phpevo->sendVideo($videoPath);
 ```
 
+#### Interact with SQS:
+
+```php
+$phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->sqs;
+
+$phpevo->setInstance($instance);
+```
+
+#### set SQS:
+
+```php
+/**
+ * @return array
+ */
+$phpevo->setSQS($enabled, $events);
+```
+
+#### get SQS:
+
+```php
+/**
+ * @return array
+ */
+$phpevo->getSQS();
+```
+
 ## Roadmap
 
 #### Instances
