@@ -5,12 +5,14 @@ namespace PHPEvo\Services;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
 use PHPEvo\Services\Enums\ValidEvents;
-use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
+use PHPEvo\Services\Interfaces\EventServiceInterface;
+use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance, ValidatesEvents};
 
-class RabbitService
+class RabbitService implements EventServiceInterface
 {
     use HasHttpRequests;
     use InteractWithInstance;
+    use ValidatesEvents;
 
     /**
      * RabbitService constructor.
@@ -19,8 +21,7 @@ class RabbitService
      */
     public function __construct(
         private Client $client,
-    ) {
-    }
+    ) {}
 
     /**
      * Set Rabbit in our instance
@@ -30,14 +31,10 @@ class RabbitService
      * @throws InvalidArgumentException If an invalid event is provided
      * @return array
      */
-    public function setRabbit(bool $enable = true, array $events = []): array
+    public function set(bool $enable = true, array $events = []): array
     {
         if (!empty($events)) {
-            foreach ($events as $event) {
-                if (!ValidEvents::isValidEvent($event)) {
-                    throw new InvalidArgumentException('Invalid event: ' . $event);
-                }
-            }
+            $this->validateEvents($events);
         }
 
         $data = [
@@ -49,11 +46,11 @@ class RabbitService
     }
 
     /**
-     * Get Rabbit in our instance
+     * Find Rabbit in our instance
      *
      * @return array
      */
-    public function getRabbit(): array
+    public function find(): array
     {
         return $this->get('rabbitmq/find/' . $this->instance);
     }

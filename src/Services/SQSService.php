@@ -5,17 +5,19 @@ namespace PHPEvo\Services;
 use GuzzleHttp\Client;
 use InvalidArgumentException;
 use PHPEvo\Services\Enums\ValidEvents;
-use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
+use PHPEvo\Services\Interfaces\EventServiceInterface;
+use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance, ValidatesEvents};
 
 /**
  * Class SQSService
  *
  * @package Evolution\Services
  */
-class SQSService
+class SQSService implements EventServiceInterface
 {
     use HasHttpRequests;
     use InteractWithInstance;
+    use ValidatesEvents;
 
     /**
      * SQSService constructor.
@@ -35,14 +37,10 @@ class SQSService
      * @throws InvalidArgumentException If an invalid event is provided
      * @return array
      */
-    public function setSQS(bool $enable = true, array $events = []): array
+    public function set(bool $enable = true, array $events = []): array
     {
         if (!empty($events)) {
-            foreach ($events as $event) {
-                if (!ValidEvents::isValidEvent($event)) {
-                    throw new InvalidArgumentException('Invalid event: ' . $event);
-                }
-            }
+            $this->validateEvents($events);
         }
 
         $data = [
@@ -54,11 +52,11 @@ class SQSService
     }
 
     /**
-     * Get SQS in our instance
+     * Find SQS in our instance
      *
      * @return array
      */
-    public function getSQS(): array
+    public function find(): array
     {
         return $this->get('sqs/find/' . $this->instance);
     }
