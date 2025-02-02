@@ -4,6 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
+use PHPEvo\Services\Enums\ValidEvents;
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
@@ -30,38 +31,16 @@ class SQSService
      * Set SQS in our instance
      *
      * @param bool $enable
-     * @param array $events
+     * @param array<string> $events
      * @return array
      */
     public function setSQS(bool $enable = true, array $events = []): array
     {
-        $validEvents = [
-            'APPLICATION_STARTUP',
-            'QRCODE_UPDATED',
-            'MESSAGES_SET',
-            'MESSAGES_UPSERT',
-            'MESSAGES_UPDATE',
-            'MESSAGES_DELETE',
-            'SEND_MESSAGE',
-            'CONTACTS_SET',
-            'CONTACTS_UPSERT',
-            'CONTACTS_UPDATE',
-            'PRESENCE_UPDATE',
-            'CHATS_SET',
-            'CHATS_UPSERT',
-            'CHATS_UPDATE',
-            'CHATS_DELETE',
-            'GROUPS_UPSERT',
-            'GROUP_UPDATE',
-            'GROUP_PARTICIPANTS_UPDATE',
-            'CONNECTION_UPDATE',
-            'CALL',
-            'NEW_JWT_TOKEN',
-        ];
-
-        foreach ($events as $event) {
-            if (!in_array($event, $validEvents, true)) {
-                throw new InvalidArgumentException("Evento inválido: $event");
+        if (!empty($events)) {
+            foreach ($events as $event) {
+                if (!ValidEvents::isValidEvent($event)) {
+                    throw new InvalidArgumentException('Invalid event: ' . $event);
+                }
             }
         }
 
