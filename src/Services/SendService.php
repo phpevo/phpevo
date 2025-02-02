@@ -3,9 +3,9 @@
 namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
-use PHPEvo\Services\Enums\MediaTypeEnum;
+use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
+use PHPEvo\Services\Models\ContactMessage;
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
-use stdClass;
 
 /**
  * Class SendService
@@ -272,6 +272,40 @@ class SendService
     }
 
     /**
+     * send contact message
+     *
+     * @param ContactMessage $contact
+     * @param array|null $options
+     *  - delay (int): Tempo de espera antes do envio (ms).
+     *  - presence (PresenceTypeEnum): Tipo de presença a ser exibido
+     * @return array
+     */
+    public function sendContact(ContactMessage $contact, ?array $options = null): array
+    {
+        if (isset($options['presence']) && !PresenceTypeEnum::isValid($options['presence'])) {
+            throw new \RuntimeException('Tipo de presença inválido.');
+        }
+
+        // When field is empty, it will be removed from the array
+        $contactMessage = array_filter([
+            'fullName'     => $contact->fullName,
+            'wuid'         => $contact->wuid,
+            'phoneNumber'  => $contact->phoneNumber,
+            'organization' => $contact->organization,
+            'email'        => $contact->email,
+            'url'          => $contact->url,
+        ], fn ($value) => !empty($value));
+
+        $data = [
+            'number'         => $this->to,
+            'options'        => $options,
+            'contactMessage' => [$contactMessage],
+        ];
+
+        return $this->post('message/sendContact/' . $this->instance, $data);
+    }
+
+    /**
      * check if file exists
      *
      * @param string $file
@@ -311,7 +345,7 @@ class SendService
             throw new \RuntimeException('Falha ao codificar o arquivo em Base64.');
         }
 
-        $filePrepared = new stdClass();
+        $filePrepared = new \stdClass();
 
         $filePrepared->fileName = basename($file);
         $filePrepared->content  = $base64File;
