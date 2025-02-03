@@ -25,5 +25,9 @@ class ReactionMessage
         if (strlen($reaction) > 1) {
             throw new \InvalidArgumentException('Reaction must be an emoji.');
         }
+
+        if (!isset($key['fromMe'], $key['id'], $key['remoteJid'])) {
+            throw new \InvalidArgumentException('Key must contain fromMe, id and remoteJid.');
+        }
     }
 }
