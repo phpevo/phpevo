@@ -233,8 +233,8 @@ $phpevo->find();
 - ✅ Send document
 - ✅ Send audio
 - ✅ Send video
+- ✅ Send Location
 - check status
-- Send Location
 - Send List
 - Send Buttons
 
