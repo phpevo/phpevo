@@ -4,7 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
-use PHPEvo\Services\Models\{ContactMessage, PreparedFile};
+use PHPEvo\Services\Models\{Messages\ContactMessage, Messages\ReactionMessage, PreparedFile};
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
@@ -302,6 +302,24 @@ class SendService
         ];
 
         return $this->post('message/sendContact/' . $this->instance, $data);
+    }
+
+    /**
+     * send reaction message
+     *
+     * @param ReactionMessage $message
+     * @return array<string, mixed>
+     */
+    public function sendReaction(ReactionMessage $message): array
+    {
+        $data = [
+            'reactionMessage' => [
+                'key'      => $message->key,
+                'reaction' => $message->reaction,
+            ],
+        ];
+
+        return $this->post('message/sendReaction/' . $this->instance, $data);
     }
 
     /**

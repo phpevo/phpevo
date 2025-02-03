@@ -120,6 +120,11 @@ $phpevo->sendVideo($videoPath);
  * @return array
  */
 $phpevo->sendContact(new ContactMessage($phone, $nonStylizedPhone), $options);
+
+/**
+ * @return array
+ */
+$phpevo->sendReaction(new ReactionMessage($key, '🧬'));
 ```
 
 ## Events
@@ -228,6 +233,7 @@ $phpevo->find();
 - ✅ Send document
 - ✅ Send audio
 - ✅ Send video
+- ✅ Send reaction
 - check status
 - Send Location
 - Send List
