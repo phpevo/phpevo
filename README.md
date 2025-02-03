@@ -120,6 +120,11 @@ $phpevo->sendVideo($videoPath);
  * @return array
  */
 $phpevo->sendContact(new ContactMessage($phone, $nonStylizedPhone), $options);
+
+/**
+ * @return array
+ */
+$phpevo->sendLocation(new LocationMessage($lat, $long, $address), $options);
 ```
 
 ## Events
@@ -228,8 +233,8 @@ $phpevo->find();
 - ✅ Send document
 - ✅ Send audio
 - ✅ Send video
+- ✅ Send Location
 - check status
-- Send Location
 - Send List
 - Send Buttons
 

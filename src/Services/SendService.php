@@ -4,7 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
-use PHPEvo\Services\Models\{ContactMessage, PreparedFile};
+use PHPEvo\Services\Models\{Messages\ContactMessage, Messages\LocationMessage, PreparedFile};
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
@@ -302,6 +302,36 @@ class SendService
         ];
 
         return $this->post('message/sendContact/' . $this->instance, $data);
+    }
+
+    /**
+     * send location message
+     *
+     * @param LocationMessage $locationMessage
+     * @param array<string, mixed>|null $options
+     * - delay (int): Presence time in milliseconds before sending message.
+     * - mentioned (array<string>): Mention a specific user.
+     * - mentionsEveryOne (bool): Mention all users.
+     * - quoted <array<string, mixed>>: Quoted message.
+     * @return array<string, mixed>
+     */
+    public function sendLocation(LocationMessage $locationMessage, ?array $options): array
+    {
+        $data = [
+            'number'           => $this->to,
+            'name'             => $locationMessage->name,
+            'address'          => $locationMessage->address,
+            'latitude'         => $locationMessage->latitude,
+            'longitude'        => $locationMessage->longitude,
+            'delay'            => $options['delay'] ?? null,
+            'quoted'           => $options['quoted'] ?? null,
+            'mentionsEveryOne' => $options['mentionsEveryOne'] ?? null,
+            'mentioned'        => $options['mentioned'] ?? [],
+        ];
+
+        $data = array_filter($data, fn ($value) => $value !== null);
+
+        return $this->post('message/sendLocation/' . $this->instance, $data);
     }
 
     /**
