@@ -124,6 +124,11 @@ $phpevo->sendContact(new ContactMessage($phone, $nonStylizedPhone), $options);
 /**
  * @return array
  */
+$phpevo->sendLocation(new LocationMessage($lat, $long, $address), $options);
+
+/**
+ * @return array
+ */
 $phpevo->sendReaction(new ReactionMessage($key, '🧬'));
 ```
 
@@ -234,8 +239,8 @@ $phpevo->find();
 - ✅ Send audio
 - ✅ Send video
 - ✅ Send reaction
+- ✅ Send Location
 - check status
-- Send Location
 - Send List
 - Send Buttons
 
