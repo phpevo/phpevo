@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPEvo\Services\Models;
+namespace PHPEvo\Services\Models\Messages;
 
 /**
  * Class ContactMessage
