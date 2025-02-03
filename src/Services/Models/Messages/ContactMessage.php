@@ -5,7 +5,7 @@ namespace PHPEvo\Services\Models\Messages;
 /**
  * Class ContactMessage
  *
- * @package Evolution\Services\Models
+ * @package Evolution\Services\Models\Messages
  */
 class ContactMessage
 {

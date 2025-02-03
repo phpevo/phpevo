@@ -4,7 +4,7 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
-use PHPEvo\Services\Models\{Messages\ContactMessage, Messages\LocationMessage, PreparedFile};
+use PHPEvo\Services\Models\{Messages\ContactMessage, Messages\LocationMessage, Messages\ReactionMessage, PreparedFile};
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
@@ -332,6 +332,24 @@ class SendService
         $data = array_filter($data, fn ($value) => $value !== null);
 
         return $this->post('message/sendLocation/' . $this->instance, $data);
+    }
+
+    /**
+     * send reaction message
+     *
+     * @param ReactionMessage $message
+     * @return array<string, mixed>
+     */
+    public function sendReaction(ReactionMessage $message): array
+    {
+        $data = [
+            'reactionMessage' => [
+                'key'      => $message->key,
+                'reaction' => $message->reaction,
+            ],
+        ];
+
+        return $this->post('message/sendReaction/' . $this->instance, $data);
     }
 
     /**

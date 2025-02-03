@@ -125,6 +125,11 @@ $phpevo->sendContact(new ContactMessage($phone, $nonStylizedPhone), $options);
  * @return array
  */
 $phpevo->sendLocation(new LocationMessage($lat, $long, $address), $options);
+
+/**
+ * @return array
+ */
+$phpevo->sendReaction(new ReactionMessage($key, '🧬'));
 ```
 
 ## Events
@@ -233,6 +238,7 @@ $phpevo->find();
 - ✅ Send document
 - ✅ Send audio
 - ✅ Send video
+- ✅ Send reaction
 - ✅ Send Location
 - check status
 - Send List
