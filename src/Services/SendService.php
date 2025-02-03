@@ -303,7 +303,7 @@ class SendService
 
         return $this->post('message/sendContact/' . $this->instance, $data);
     }
-  
+
     /**
      * send location message
      *
