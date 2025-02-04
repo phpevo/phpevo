@@ -4,7 +4,11 @@ namespace PHPEvo\Services;
 
 use GuzzleHttp\Client;
 use PHPEvo\Services\Enums\{MediaTypeEnum, PresenceTypeEnum};
-use PHPEvo\Services\Models\{Messages\ContactMessage, Messages\LocationMessage, Messages\ReactionMessage, PreparedFile};
+use PHPEvo\Services\Models\{Messages\ContactMessage,
+    Messages\LocationMessage,
+    Messages\PollMessage,
+    Messages\ReactionMessage,
+    PreparedFile};
 use PHPEvo\Services\Traits\{HasHttpRequests, InteractWithInstance};
 
 /**
@@ -350,6 +354,35 @@ class SendService
         ];
 
         return $this->post('message/sendReaction/' . $this->instance, $data);
+    }
+
+    /**
+     * send poll message
+     *
+     * @param PollMessage $poll
+     * @param array<string, mixed>|null $options
+     * - delay (int): Presence time in milliseconds before sending message
+     * - quoted (array<string, mixed>): Quoted message
+     * - mentionsEveryOne (bool): Mention everyone on a group message
+     * - mentioned (array<string>): Mention a specific user
+     * @return array<string, mixed>
+     */
+    public function sendPoll(PollMessage $poll, ?array $options = null): array
+    {
+        $data = [
+            'number'           => $this->to,
+            'name'             => $poll->name,
+            'selectableCount'  => $poll->selectableCount,
+            'values'           => $poll->values,
+            'delay'            => $options['delay'] ?? null,
+            'quoted'           => $options['quoted'] ?? null,
+            'mentionsEveryOne' => $options['mentionsEveryOne'] ?? null,
+            'mentioned'        => $options['mentioned'] ?? [],
+        ];
+
+        $data = array_filter($data, fn ($value) => $value !== null);
+
+        return $this->post('message/sendPoll/' . $this->instance, $data);
     }
 
     /**

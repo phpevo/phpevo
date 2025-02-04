@@ -130,6 +130,11 @@ $phpevo->sendLocation(new LocationMessage($lat, $long, $address), $options);
  * @return array
  */
 $phpevo->sendReaction(new ReactionMessage($key, '🧬'));
+
+/**
+ * @return array
+ */
+$phpevo->sendPoll(new PollMessage($title, $selectableCount, $values), $options);
 ```
 
 ## Events
@@ -240,6 +245,8 @@ $phpevo->find();
 - ✅ Send video
 - ✅ Send reaction
 - ✅ Send Location
+- ✅ Send Contact
+- ✅ Send Poll
 - check status
 - Send List
 - Send Buttons
