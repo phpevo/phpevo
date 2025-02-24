@@ -80,7 +80,7 @@ $phpevo->destroy();
 $phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->send;
 
 $phpevo
-    ->setInstance($instance)
+    ->instance($instance)
     ->to($phone);
 ```
 
@@ -144,7 +144,7 @@ $phpevo->sendPoll(new PollMessage($title, $selectableCount, $values), $options);
 ```php
 $phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->websocket;
 
-$phpevo->setInstance($instance);
+$phpevo->instance($instance);
 ```
 
 #### Set WebSockets:
@@ -172,7 +172,7 @@ $phpevo->find();
 ```php
 $phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->sqs;
 
-$phpevo->setInstance($instance);
+$phpevo->instance($instance);
 ```
 
 #### Set SQS:
@@ -200,7 +200,7 @@ $phpevo->find();
 ```php
 $phpevo = (new PHPEvo($apiKey, $apiBaseUrl))->rabbit;
 
-$phpevo->setInstance($instance);
+$phpevo->instance($instance);
 ```
 
 #### Set RabbitMQ:
