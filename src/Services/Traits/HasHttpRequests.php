@@ -45,7 +45,8 @@ trait HasHttpRequests
                 'json' => $options,
             ]);
 
-            if ($response->getStatusCode() == 201) {
+            $status = $response->getStatusCode();
+            if ($status == 200 || $status == 201) {
                 /** @var array<string, mixed> */
                 return json_decode($response->getBody()->getContents(), true);
             }
